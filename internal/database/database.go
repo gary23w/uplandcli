@@ -61,7 +61,7 @@ func CreateTables() {
 func AddPropertiesToDatabase(properties []models.DataPackageBLOCK) {
 	db := connectToDatabase()
 	defer db.Close()
-	CreateTables()
+	CreateTables() // if table doesn't exist, create it
 	for _, value := range properties {
 		_, err := db.Exec(fmt.Sprintf("INSERT INTO properties (type, prop_id, address, price) VALUES ('%s', '%s', '%s', '%s')", value.Type, value.ID, value.Address, value.Price))
 		if err != nil {

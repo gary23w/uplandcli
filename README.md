@@ -24,7 +24,15 @@ go run main.go upland --live
 
 ## Database
 
-An internal/external database has not been selected yet.
+Currently setup to deploy a postgresql database onto heroku.
+Make sure you are signed into heroku and then execute.
+
+```
+go run main.go database --deploy
+
+```
+
+the current collection methods rely on the database so be sure to have one installed.
 
 ## Goals
 
