@@ -7,6 +7,7 @@ require (
 	github.com/chromedp/cdproto v0.0.0-20220117091653-dcaca7efe124
 	github.com/chromedp/chromedp v0.7.6
 	github.com/gizak/termui/v3 v3.1.0
+	github.com/lib/pq v1.10.4
 	github.com/spf13/cobra v1.3.0
 	go.uber.org/zap v1.20.0
 )

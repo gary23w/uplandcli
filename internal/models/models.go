@@ -1,8 +1,10 @@
 package models
 
 type DataPackageBLOCK struct {
-	Type string 
-	ID  string
+	Type    string
+	ID      string
+	Address string
+	Price   string
 }
 
 type APIRespBlockchain struct {

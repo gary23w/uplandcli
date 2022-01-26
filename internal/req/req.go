@@ -2,10 +2,12 @@ package req
 
 import (
 	"encoding/json"
+	"eos_bot/internal/models"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"eos_bot/internal/models"
+
+	"eos_bot/internal/database"
 )
 
 func httpClient(req *http.Request) (string, error) {
@@ -20,7 +22,7 @@ func httpClient(req *http.Request) (string, error) {
 	return string(body), nil
 }
 
-func EOShttpBasicRequest() models.APIRespBlockchain {
+func httpEOSBasicRequest() models.APIRespBlockchain {
 		var RespObj models.APIRespBlockchain
 		req, err := http.NewRequest("GET", "https://eos.hyperion.eosrio.io/v2/history/get_actions?account=playuplandme&skip=0&limit=100&sort=desc", nil)
 		if err != nil {
@@ -34,26 +36,34 @@ func EOShttpBasicRequest() models.APIRespBlockchain {
 		return RespObj
 }
 
-func EOShttpRespParser(req models.APIRespBlockchain) []models.DataPackageBLOCK {
+func httpEOSRespParser(req models.APIRespBlockchain) []models.DataPackageBLOCK {
 	var myList []models.DataPackageBLOCK
 	for _, v := range req.Actions {
 		if v.Act.Name == "n2" {
-			// fmt.Println(v.Act.Name)
-			// fmt.Println(v.Act.Data.A45)
 			myList = append(myList, models.DataPackageBLOCK{
 				Type: v.Act.Name,
 				ID: v.Act.Data.A45,
+				Address: "NULL",
+				Price: "NULL",
 			})
 		}
+	}
+	// add list to database
+	database.AddPropertiesToDatabase(myList)
+	if len(myList) == 0 {
+		myList = append(myList, models.DataPackageBLOCK{
+			Type: "No data found",
+			ID: "",
+		})
 	}
 	return myList
 }
 
 func CollectJsonFromAPI() [] models.DataPackageBLOCK {
 	// do basic request
-	respObj := EOShttpBasicRequest()
+	respObj := httpEOSBasicRequest()
 	// parse response
-	parseDetails := EOShttpRespParser(respObj)
+	parseDetails := httpEOSRespParser(respObj)
 	// more data manipulation?
 	//////
 	return parseDetails

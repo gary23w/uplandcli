@@ -45,41 +45,44 @@ func TermUIpanel(ty string) {
 		l.SetRect(0, 0, termWidth, termHeight)
 		
 		ui.Render(l)
-		previousKey := ""
+		//previousKey := ""
 
-		uiEvents := ui.PollEvents()
+		//uiEvents := ui.PollEvents()
 		var timer int = 0
 		for {
-			e := <-uiEvents
-			switch e.ID {
-				case "q", "<C-c>":
-					return
-				case "j", "<Down>":
-					l.ScrollDown()
-				case "k", "<Up>":
-					l.ScrollUp()
-				case "<C-d>":
-					l.ScrollHalfPageDown()
-				case "<C-u>":
-					l.ScrollHalfPageUp()
-				case "<C-f>":
-					l.ScrollPageDown()
-				case "<C-b>":
-					l.ScrollPageUp()
-				case "g":
-					if previousKey == "g" {
-						l.ScrollTop()
-					}
-				case "<Home>":
-					l.ScrollTop()
-				case "G", "<End>":
-					l.ScrollBottom()
-			}
-			if previousKey == "g" {
-				previousKey = ""
-			} else {
-				previousKey = e.ID
-			}
+			//e := <-uiEvents
+			// switch e.ID {
+			// 	case "q", "<C-c>":
+			// 		return
+			// 	case "j", "<Down>":
+			// 		l.ScrollDown()
+			// 	case "k", "<Up>":
+			// 		l.ScrollUp()
+			// 	case "<C-d>":
+			// 		l.ScrollHalfPageDown()
+			// 	case "<C-u>":
+			// 		l.ScrollHalfPageUp()
+			// 	case "<C-f>":
+			// 		l.ScrollPageDown()
+			// 	case "<C-b>":
+			// 		l.ScrollPageUp()
+			// 	case "g":
+			// 		if previousKey == "g" {
+			// 			l.ScrollTop()
+			// 		}
+			// 	case "<Home>":
+			// 		l.ScrollTop()
+			// 	case "G", "<End>":
+			// 		l.ScrollBottom()
+			// }
+			// if e.ID == "q" || e.ID == "<C-c>" {
+			// 	return
+			// }
+			// if previousKey == "g" {
+			// 	previousKey = ""
+			// } else {
+			// 	previousKey = e.ID
+			// }
 			ui.Render(l)
 			if timer == 10 {
 				break

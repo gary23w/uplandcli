@@ -29,12 +29,8 @@ PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 fmt.Printf("Setting up UPLD-CLI-%v: \n", Version)
 
 config := zap.Config{}
-testFile, err := os.OpenFile("upland.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-if err != nil {
-	fmt.Printf("error opening upland.log: %v", err)
-}
-testFile.WriteString("Setting up UPLD-CLI-0.1.0: \n")
-testFile.Close()
+config.Level.SetLevel(zap.NewAtomicLevelAt(zap.DebugLevel))
+//configure the logger
 jsonfile, err := os.Open("utils/logging.json")
 	if err != nil {
 		log.Fatalln("Couldn't open the json file", err)
