@@ -29,7 +29,7 @@ PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 fmt.Printf("Setting up UPLD-CLI-%v: \n", Version)
 
 config := zap.Config{}
-config.Level.SetLevel(zap.NewAtomicLevelAt(zap.DebugLevel))
+//config.Level.SetLevel(zap.NewAtomicLevelAt(zap.DebugLevel))
 //configure the logger
 jsonfile, err := os.Open("utils/logging.json")
 	if err != nil {

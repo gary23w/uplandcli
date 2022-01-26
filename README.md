@@ -64,3 +64,9 @@ Ensure that both godoc and godoc-static are installed.
 - [TermUI]("https://github.com/gizak/termui")
 - [Cobra]("https://github.com/spf13/cobra")
 - [ZAP]("go.uber.org/zap")
+
+## API's
+
+- https://api.upland.me
+
+- https://eos.hyperion.eosrio.io

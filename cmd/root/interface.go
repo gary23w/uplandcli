@@ -27,18 +27,19 @@ func TermUIpanel(ty string) {
 		data = req.CollectJsonFromAPI()
 		// loop through data list
 		for _, v := range data {
-			l := fmt.Sprintf("[*] %s: %s\n", v.Type, v.ID)
+			var l string
+			if v.Type != "NULL-DATA" {
+				l = fmt.Sprintf("[*] %s: %s: https://play.upland.me/?prop_id=%s: %s\n", v.UPX, v.FIAT, v.ID, v.Address)
+			} else {
+				l = "[*] No data available\n"
+			}
 			newRows = append(newRows, l)
 		}
 		l := widgets.NewList()
 		
 		l.Title = ty + check
 		// check newRows size	
-		if len(newRows) > 0 {
-			l.Rows = newRows
-		} else {
-			l.Rows = []string{"[*] No data found"}
-		}
+		
 		l.Rows = newRows
 		l.TextStyle = ui.NewStyle(ui.ColorYellow)
 		l.WrapText = false

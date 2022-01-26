@@ -42,6 +42,6 @@ func UplandPipeline(cmd *cobra.Command, args []string) {
 		TermUIpanel("Collecting data from blockchain")
 	}
 	if qt {
-		fmt.Println("offline until implemented")
+		fmt.Println("silent for now.")
 	}
 }

@@ -50,7 +50,10 @@ func CreateTables() {
 		type VARCHAR(255) NOT NULL,
 		prop_id VARCHAR(255) NOT NULL,
 		address VARCHAR(255) NOT NULL,
-		price VARCHAR(255) NOT NULL,
+		latitude VARCHAR(255) NOT NULL,
+		longitude VARCHAR(255) NOT NULL,
+		upx VARCHAR(255) NOT NULL,
+		fiat VARCHAR(255) NOT NULL,
 		created_at TIMESTAMP NOT NULL DEFAULT NOW()
 	);`)
 	if err != nil {
@@ -63,7 +66,7 @@ func AddPropertiesToDatabase(properties []models.DataPackageBLOCK) {
 	defer db.Close()
 	CreateTables() // if table doesn't exist, create it
 	for _, value := range properties {
-		_, err := db.Exec(fmt.Sprintf("INSERT INTO properties (type, prop_id, address, price) VALUES ('%s', '%s', '%s', '%s')", value.Type, value.ID, value.Address, value.Price))
+		_, err := db.Exec(fmt.Sprintf("INSERT INTO properties (type, prop_id, address, latitude, longitude, upx, fiat) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s') ON CONFLICT (ID) DO NOTHING", value.Type, value.ID, value.Address, value.Lat, value.Long, value.UPX, value.FIAT))
 		if err != nil {
 			log.Fatal(err)
 		}
