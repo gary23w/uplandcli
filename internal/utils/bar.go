@@ -18,7 +18,7 @@ func (bar *Bar) NewOption(start, total int64) {
 	bar.cur = start
 	bar.total = total
 	if bar.graph == "" {
-		bar.graph = ">.<"
+		bar.graph = "="
 	}
 	bar.percent = bar.getPercent()
 	for i := 0; i < int(bar.percent); i += 2 {

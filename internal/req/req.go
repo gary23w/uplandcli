@@ -48,7 +48,7 @@ func httpEOSgetAddress(prop_id string) models.UplandPropData {
 	var PropData models.UplandPropData
 	err = json.Unmarshal([]byte(res), &PropData)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("Error: ", err)
 	}
 	return PropData
 }
@@ -57,7 +57,6 @@ func httpEOSRespParser(req models.APIRespBlockchain) []models.DataPackageBLOCK {
 	var myList []models.DataPackageBLOCK
 	for _, v := range req.Actions {
 		if v.Act.Name == "n2" {
-			// collect address
 			PropData := httpEOSgetAddress(v.Act.Data.A45)
 			myList = append(myList, models.DataPackageBLOCK{
 				Type: v.Act.Name,
@@ -65,8 +64,8 @@ func httpEOSRespParser(req models.APIRespBlockchain) []models.DataPackageBLOCK {
 				Address: PropData.FullAddress,
 				Lat: PropData.Centerlat,
 				Long: PropData.Centerlng,
-				UPX: v.Act.Data.P11,
-				FIAT: v.Act.Data.P3,
+				UPX: PropData.OnMarket.Token,
+				FIAT: PropData.OnMarket.Fiat,
 			})
 		}
 	}
