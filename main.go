@@ -1,9 +1,11 @@
 package main
 
 import (
-	"eos_bot/cmd/root"
+	api "eos_bot/api/props_crud"
+	//"eos_bot/cmd/root"
 )
 
 func main() {
-	root.ExecuteCLI()
+	api.StartAPI()
+	//root.ExecuteCLI()
 }

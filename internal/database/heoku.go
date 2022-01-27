@@ -13,6 +13,14 @@ import (
 	"eos_bot/internal/utils"
 )
 
+// appname = heroes_crud
+// httpport = 1337
+// runmode = dev
+// autorender = false
+// copyrequestbody = true
+// EnableDocs = true
+// sqlconn =
+
 func checkHeroku() bool {
 	//get heroku version
     out, err := exec.Command("heroku", "--version").Output()
@@ -84,7 +92,24 @@ func buildPostgres() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = ioutil.WriteFile("./utils/database.json", json_file, 0644)
+	err = ioutil.WriteFile("./conf/database.json", json_file, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// set API url
+	myConf := `
+	appname = heroes_crud
+	httpport = 1337
+	runmode = dev
+	autorender = false
+	copyrequestbody = true
+	EnableDocs = true
+	sqlconn = ` + string(cmd3) + `
+	`
+
+	// write string to config file
+	err = ioutil.WriteFile("./conf/app.conf", []byte(myConf), 0644)
 	if err != nil {
 		log.Fatal(err)
 	}

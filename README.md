@@ -61,7 +61,7 @@ Update utils/database.json if you choose to use your own data center.
 }
 ```
 
-## Goals
+## CLI Goals
 
 - A small tool to live load all blockchain information related to upland.me
 - Create a pipeline that collects from eos.hyperion.eosrio.io
@@ -69,6 +69,14 @@ Update utils/database.json if you choose to use your own data center.
 - Create a local database for collected data
 - Implement graphing and various analytics systems.
   - Analyze longterm data to predict possible trends.
+
+## API Docs
+
+A small beego/swagger CRUD api is implemented
+
+```
+GET /v1/properties       | Get properties from database.
+```
 
 ## Generated Documentation
 
