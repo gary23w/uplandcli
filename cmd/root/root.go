@@ -24,6 +24,8 @@ Version: Version,
 Short:   "Upland CLI interacts with the blockchain",
 Long: `++UPLND-CLI++
 =================
+The UPLND-CLI will interact with the blockchain to collect data related to Upland properties.
+This data will be used to populate the CLI based user interface.
 Dy`,
 PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 fmt.Printf("Setting up UPLD-CLI-%v: \n", Version)

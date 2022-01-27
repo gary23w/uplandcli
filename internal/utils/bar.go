@@ -4,8 +4,6 @@ import (
 	"fmt"
 )
 
-// a simple loading bar
-
 type Bar struct {
 	percent int64  // progress percentage
 	cur     int64  // current progress

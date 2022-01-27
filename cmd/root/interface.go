@@ -37,9 +37,7 @@ func TermUIpanel(ty string) {
 		}
 		l := widgets.NewList()
 		
-		l.Title = ty + check
-		// check newRows size	
-		
+		l.Title = ty + check		
 		l.Rows = newRows
 		l.TextStyle = ui.NewStyle(ui.ColorYellow)
 		l.WrapText = false
@@ -47,7 +45,6 @@ func TermUIpanel(ty string) {
 		
 		ui.Render(l)
 		//previousKey := ""
-
 		//uiEvents := ui.PollEvents()
 		var timer int = 0
 		for {

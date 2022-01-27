@@ -8,31 +8,58 @@
 
 You must have the following versions of Node.js, npm, and Go installed:
 
-- Node.js: [Node.js](https://nodejs.org/en/) v14.17.6
-- NPM: [npm](https://www.npmjs.com/) > v6.14.x
+- ~~Node.js: [Node.js](https://nodejs.org/en/) v14.17.6~~ currently not required
+- ~~NPM: [npm](https://www.npmjs.com/) > v6.14.x~~ currently not required
 
 - Go: [Go](https://golang.org/doc/install) > v1.16.x
-
-## Basic CLI cmds
-
-```shell
-go run main.go upland --help
-go run main.go upland --collect
-go run main.go upland --live
-
-```
 
 ## Database
 
 Currently setup to deploy a postgresql database onto heroku.
-Make sure you are signed into heroku and then execute.
+
+_Make sure you are signed into heroku frst._
 
 ```
 go run main.go database --deploy
+```
+
+see configuration for more details.
+
+## Basic Commands
+
+```shell
+go run main.go upland --help
+```
+
+collects and displays the data within a TermUI interface.
+
+```
+go run main.go upland --collect
+```
+
+collects and tails the data in your shell.
+
+```
+go run main.go upland --live
 
 ```
 
-the current collection methods rely on the database so be sure to have one installed.
+## Configuration
+
+the current collection methods rely on a **POSTGRES** database.
+Update utils/database.json if you choose to use your own data center.
+
+```
+{
+    "Url": "null",
+    "PSQLurl": "null",
+    "User": "<DB NAME>",
+    "Password": "<DB PASSWORD>",
+    "Host": "<DB HOST>",
+    "Port": "<PORT>",
+    "Database": "<DATABASE>"
+}
+```
 
 ## Goals
 
@@ -65,8 +92,11 @@ Ensure that both godoc and godoc-static are installed.
 - [Cobra]("https://github.com/spf13/cobra")
 - [ZAP]("go.uber.org/zap")
 
-## API's
+## Acknowledgements
 
-- https://api.upland.me
+- Shout out to UPLAND.ME for an amazing metaverse experience.
 
-- https://eos.hyperion.eosrio.io
+  - https://api.upland.me
+
+- EOS Hyperion
+  - https://eos.hyperion.eosrio.io

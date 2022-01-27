@@ -28,17 +28,6 @@ func checkHeroku() bool {
 func loginHeroku() {
 	if checkHeroku() == false {
 		// force user to login to heroku?
-		// cmd := exec.Command("heroku", "login")
-		// cmd.Stdout = os.Stdout
-		// cmd.Stderr = os.Stderr
-		// err := cmd.Start()
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// err = cmd.Wait()
-		// if err != nil {		
-		// 	log.Fatal(err)
-		// }
 		log.Fatalf("Please exit this app and login to heroku before proceeding any further. See https://devcenter.heroku.com/articles/heroku-cli for more details.")
 	}
 }
@@ -49,7 +38,8 @@ func buildPostgres() {
 		log.Fatal(err)
 	}
 	fmt.Printf("%s\n", cmd)
-	// split cmd output
+
+	// get app url fronm output
 	ur := strings.Split(string(cmd), "|")
 	url := ur[0]
 	
@@ -58,20 +48,26 @@ func buildPostgres() {
 		log.Fatal(err)
 	}
 	fmt.Printf("%s\n", cmd2)
-	// get url from cmd2
+    
+	// get postgres name from output
 	regg := regexp.MustCompile(`Created\s(.*)\sas`)
 	urp := regg.FindStringSubmatch(string(cmd2))
 	url2 := strings.Split(urp[0], " ")
+
+
 	time.Sleep(10 * time.Second)
 	cmd3, err3 := exec.Command("heroku", "config", "-a", "upland-cli").Output()
 	if err3 != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("%s\n", cmd3)
+    
+	// split database config and collect login credentials
 	user_reg := regexp.MustCompile(`\/\/(.*)@(.*):5432\/(.*)`)
 	user := user_reg.FindStringSubmatch(string(cmd3))
 	u := strings.Split(user[1], ":")
-	// build UserCredentials struct
+
+	// set user credential struct
 	user_cred := UserCredentials{
 		Url: 	url,
 		PSQLurl: url2[1],
@@ -81,8 +77,9 @@ func buildPostgres() {
 		Port:     "5432",
 		Database: user[3],
 	}
-
 	fmt.Println(user_cred)
+
+	// write user credentials to database json file
 	json_file, err := json.MarshalIndent(user_cred, "", "    ")
 	if err != nil {
 		log.Fatal(err)
