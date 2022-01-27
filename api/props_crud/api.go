@@ -3,8 +3,8 @@ package props_crud
 import (
 	_ "eos_bot/api/props_crud/routers"
 
-	beego "github.com/beego/beego/v2/server/web"
 	"github.com/beego/beego/v2/client/orm"
+	beego "github.com/beego/beego/v2/server/web"
 	"github.com/beego/beego/v2/server/web/filter/cors"
 	_ "github.com/lib/pq"
 )
@@ -29,5 +29,6 @@ func StartAPI() {
         AllowCredentials: true,
     }))
     beego.Run()
+
 }
 

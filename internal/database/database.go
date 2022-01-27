@@ -15,7 +15,7 @@ import (
 // get postgres credentials from json file
 func getPostgresCredentials() UserCredentials {
 	var userCredentials UserCredentials
-	jsonFile, err := os.Open("utils/database.json")
+	jsonFile, err := os.Open("conf/database.json")
 	if err != nil {
 		log.Fatalln("Couldn't open the json file", err)
 		return userCredentials

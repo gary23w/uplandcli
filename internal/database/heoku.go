@@ -13,7 +13,7 @@ import (
 	"eos_bot/internal/utils"
 )
 
-// appname = heroes_crud
+// appname = upland_crud
 // httpport = 1337
 // runmode = dev
 // autorender = false
@@ -99,7 +99,7 @@ func buildPostgres() {
 
 	// set API url
 	myConf := `
-	appname = heroes_crud
+	appname = props_crud
 	httpport = 1337
 	runmode = dev
 	autorender = false

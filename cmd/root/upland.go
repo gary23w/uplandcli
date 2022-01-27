@@ -1,6 +1,7 @@
 package root
 
 import (
+	api "eos_bot/api/props_crud"
 	"eos_bot/internal/live"
 
 	"github.com/spf13/cobra"
@@ -38,10 +39,11 @@ func init() {
 }
 
 func UplandPipeline(cmd *cobra.Command, args []string) {
-	if dt {
-		TermUIpanel("Collecting data from blockchain")
-	}
-	if qt {
-		live.TailDatabaseTables()
-	}
+		go api.StartAPI()
+		if dt {
+			TermUIpanel("Collecting data from blockchain")
+		}
+		if qt {
+			live.TailDatabaseTables()
+		}
 }
