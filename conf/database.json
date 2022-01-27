@@ -1,9 +1,0 @@
-{
-    "Url": "https://upland-cli.herokuapp.com/ ",
-    "PSQLurl": "postgresql-asymmetrical-35559",
-    "User": "vyzepmljquuvga",
-    "Password": "f1ebeb61d293f08ff1a73229eaea0ae62756ab980912074f7c292787a1f56504",
-    "Host": "ec2-34-205-46-149.compute-1.amazonaws.com",
-    "Port": "5432",
-    "Database": "dbp349ie0krp84"
-}
