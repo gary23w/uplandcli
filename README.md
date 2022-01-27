@@ -75,7 +75,7 @@ Update utils/database.json if you choose to use your own data center.
 A small beego/swagger CRUD api is implemented
 
 ```
-GET /v1/properties       | Get properties from database.
+GET /upland/properties       | Get properties from database.
 ```
 
 ## Generated Documentation
