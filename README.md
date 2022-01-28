@@ -95,10 +95,16 @@ Ensure that both godoc and godoc-static are installed.
 ## Built With
 
 - [Golang]("https://go.dev/")
+
 - [chromedp]("https://github.com/chromedp/chromedp")
+
 - [TermUI]("https://github.com/gizak/termui")
+
 - [Cobra]("https://github.com/spf13/cobra")
+
 - [ZAP]("go.uber.org/zap")
+
+- [BEEGO]("https://github.com/beego/beego")
 
 ## Acknowledgements
 

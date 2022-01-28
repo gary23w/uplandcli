@@ -24,10 +24,27 @@ func connectToDatabase() *sql.DB {
 	return db
 }
 
+func CreateCookieTable() {
+	db := connectToDatabase()
+	defer db.Close()
+	_, err := db.Exec(`
+	CREATE TABLE IF NOT EXISTS session (
+		session_key char(64) NOT NULL,
+		session_data bytes,
+		session_expiry timestamp NOT NULL DEFAULT NOW()
+		CONSTRAINT session_key PRIMARY KEY(session_key)
+		);
+	`)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func CreateTables() {
 	db := connectToDatabase()
 	defer db.Close()
-	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS properties (
+	_, err := db.Exec(`
+	CREATE TABLE IF NOT EXISTS properties (
 		id SERIAL PRIMARY KEY,
 		type VARCHAR(255) NOT NULL,
 		prop_id VARCHAR(255) NOT NULL,
@@ -37,7 +54,8 @@ func CreateTables() {
 		upx VARCHAR(255) NOT NULL,
 		fiat VARCHAR(255) NOT NULL,
 		created_at TIMESTAMP NOT NULL DEFAULT NOW()
-	);`)
+	);
+	`)
 	if err != nil {
 		log.Fatal(err)
 	}

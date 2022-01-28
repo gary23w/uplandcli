@@ -11,14 +11,6 @@ import (
 	"eos_bot/internal/utils"
 )
 
-// appname = upland_crud
-// httpport = 1337
-// runmode = dev
-// autorender = false
-// copyrequestbody = true
-// EnableDocs = true
-// sqlconn =
-
 func checkHeroku() bool {
 	//get heroku version
     out, err := exec.Command("heroku", "--version").Output()
