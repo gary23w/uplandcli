@@ -1,9 +1,7 @@
 package database
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os/exec"
 	"regexp"
@@ -71,6 +69,9 @@ func buildPostgres() {
 	fmt.Printf("%s\n", cmd3)
     
 	// split database config and collect login credentials
+	postg_reg := regexp.MustCompile(`DATABASE_URL:\s(.*)`)
+	post_rget := postg_reg.FindStringSubmatch(string(cmd3))
+	post_url := post_rget[1] + "?sslmode=require"
 	user_reg := regexp.MustCompile(`\/\/(.*)@(.*):5432\/(.*)`)
 	user := user_reg.FindStringSubmatch(string(cmd3))
 	u := strings.Split(user[1], ":")
@@ -84,36 +85,12 @@ func buildPostgres() {
 		Host:     user[2],
 		Port:     "5432",
 		Database: user[3],
+		RowLoad: 0,
 	}
 	fmt.Println(user_cred)
-
-	// write user credentials to database json file
-	json_file, err := json.MarshalIndent(user_cred, "", "    ")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = ioutil.WriteFile("./conf/database.json", json_file, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// set API url
-	myConf := `
-	appname = props_crud
-	httpport = 1337
-	runmode = dev
-	autorender = false
-	copyrequestbody = true
-	EnableDocs = true
-	sqlconn = ` + string(cmd3) + `
-	`
-
-	// write string to config file
-	err = ioutil.WriteFile("./conf/app.conf", []byte(myConf), 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
+	writeConfigFiles(user_cred, post_url)
 }
+
 
 func DestroyPostgres() {
 	cmd, err := exec.Command("heroku", "destroy", "--app", "upland-cli", "--confirm", "upland-cli").Output()

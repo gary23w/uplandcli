@@ -2,30 +2,12 @@ package database
 
 import (
 	"database/sql"
-	"encoding/json"
 	"eos_bot/internal/models"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"os"
 
 	_ "github.com/lib/pq"
 )
-
-// get postgres credentials from json file
-func getPostgresCredentials() UserCredentials {
-	var userCredentials UserCredentials
-	jsonFile, err := os.Open("conf/database.json")
-	if err != nil {
-		log.Fatalln("Couldn't open the json file", err)
-		return userCredentials
-	}
-	defer jsonFile.Close()
-
-	byteValue, _ := ioutil.ReadAll(jsonFile)
-	json.Unmarshal(byteValue, &userCredentials)
-	return userCredentials
-}
 
 var creds UserCredentials = getPostgresCredentials()
 
@@ -62,15 +44,23 @@ func CreateTables() {
 }
 
 func AddPropertiesToDatabase(properties []models.DataPackageBLOCK) {
+	usr := getPostgresCredentials()
 	db := connectToDatabase()
 	defer db.Close()
 	CreateTables() // if table doesn't exist, create it
-	for _, value := range properties {
-		_, err := db.Exec(fmt.Sprintf("INSERT INTO properties (type, prop_id, address, latitude, longitude, upx, fiat) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s') ON CONFLICT (ID) DO NOTHING", value.Type, value.ID, value.Address, value.Lat, value.Long, value.UPX, value.FIAT))
-		if err != nil {
-			log.Fatal(err)
+	if usr.RowLoad < 10000 {
+		for _, value := range properties {
+			_, err := db.Exec(fmt.Sprintf("INSERT INTO properties (type, prop_id, address, latitude, longitude, upx, fiat) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s') ON CONFLICT (ID) DO NOTHING", value.Type, value.ID, value.Address, value.Lat, value.Long, value.UPX, value.FIAT))
+			if err != nil {
+				log.Fatal(err)
+			}
+			usr.RowLoad = usr.RowLoad + 1
 		}
+	} else {
+		log.Println("Row load limit reached, DATABASE OFFLINE...")
 	}
+	fmt.Println("[*] Rows loaded: ", usr.RowLoad)
+	setLoadVar(usr)
 }
 
 func GetPropertiesFromDatabase() {
