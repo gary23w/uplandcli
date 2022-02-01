@@ -14,7 +14,7 @@ func StartAPI() {
 	orm.RegisterDataBase("default", "postgres", sqlconn)
 	if beego.BConfig.RunMode == "dev" {
 		beego.BConfig.WebConfig.DirectoryIndex = true
-		beego.BConfig.WebConfig.StaticDir["/docs"] = "metrics"
+		//beego.BConfig.WebConfig.StaticDir["/docs"] = "metrics"
 	}
 	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
 		AllowOrigins: []string{"*"},

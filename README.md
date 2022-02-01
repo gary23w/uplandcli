@@ -121,6 +121,15 @@ A small beego/swagger CRUD api is implemented
 GET /upland/properties       | Get properties from database.
 ```
 
+---
+
+You can also view the data in an html table format.
+Simply fire up the API and go to:
+
+`http://127.0.0.1:1337/upland/properties/analysis`
+
+in your browser. Data here is pulled in DESC order. Meaning that whichever is at the top of the list will be the most recently collected data.
+
 ## Generated Documentation
 
 To generate the documentation, run the following command:

@@ -169,3 +169,21 @@ func (c *PropertiesController) Delete() {
 	}
 	c.ServeJSON()
 }
+// GetAnalytics ...
+// @Title GetAnalytics
+// @Description get analytics
+// @Success 200 {object} models.Properties
+func (c *PropertiesController) GetAnal() {
+	// return golang http template
+	c.TplName = "index.html"
+
+	// get all properties
+	l, err := models.GetEveryPropertyDesc()
+	if err != nil {
+		c.Data["json"] = err.Error()
+	} else {
+		c.Data["json"] = l
+	}
+	c.Data["Title"] = "Properties"
+	c.Render()
+}

@@ -19,7 +19,8 @@ func connectToDatabase() *sql.DB {
 	}
     err = db.Ping()
 	if err != nil {
-		log.Fatal(err)
+		//log.Fatal(err)
+		log.Fatal("Database connection failed. Please run 'upld database --deploy' for more details.")
 	}
 	return db
 }
@@ -63,9 +64,9 @@ func CreateTables() {
 
 func AddPropertiesToDatabase(properties []models.DataPackageBLOCK) {
 	usr := getPostgresCredentials()
+	CreateTables()
 	db := connectToDatabase()
 	defer db.Close() 
-	CreateTables()
 	if usr.RowLoad >= 10000 {
 			log.Println("Row load limit reached, DATABASE RESETTING...")		
 			newDb := writeNewName()

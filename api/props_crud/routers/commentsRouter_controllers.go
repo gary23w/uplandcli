@@ -52,5 +52,14 @@ func init() {
 	MethodParams: param.Make(),
 	Filters: nil,
 	Params: nil})
+	
+	beego.GlobalControllerRouter["eos_bot/api/props_crud/controllers:PropertiesController"] = append(beego.GlobalControllerRouter["eos_bot/api/props_crud/controllers:PropertiesController"],
+	beego.ControllerComments{
+	Method: "GetAnal",
+	Router: "/analysis",
+	AllowHTTPMethods: []string{"get"},
+	MethodParams: param.Make(),
+	Filters: nil,
+	Params: nil})
 
 }

@@ -3,6 +3,7 @@ package models_api
 import (
 	"errors"
 	"fmt"
+	"log"
 	"reflect"
 	"strings"
 	"time"
@@ -47,12 +48,39 @@ func GetPropertiesById(id int) (v *Properties, err error) {
 	return nil, err
 }
 
+// Get everything from database table properties from desc to asc
+func GetEveryPropertyDesc() (ml []interface{}, err error) {
+	o := orm.NewOrm()
+	var properties []Properties
+	if _, err = o.QueryTable("properties").OrderBy("-id").All(&properties); err == nil {
+		for _, v := range properties {
+			ml = append(ml, v)
+		}
+		return ml, nil
+	}
+	return nil, err
+}
+
+// Get everything from database table properties
+func GetEveryProperty() (ml []interface{}, err error) {
+	o := orm.NewOrm()
+	var l []Properties
+	if _, err := o.QueryTable(new(Properties)).All(&l); err == nil {
+		for _, v := range l {
+			ml = append(ml, v)
+		}
+		return ml, nil
+	}
+	return nil, err
+}
+
 // GetAllProperties retrieves all Properties matches certain condition. Returns empty list if
 // no records exist
 func GetAllProperties(query map[string]string, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(Properties))
+	log.Println(qs)
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute

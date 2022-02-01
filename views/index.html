@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      type="text/javascript"
+      src="https://code.jquery.com/jquery-2.1.1.min.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <!-- charts -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+    <style>
+      body {
+        background: #26c6da;
+      }
+      nav {
+        background: #00acc1;
+      }
+      .dataset-heading {
+        margin-left: 25px;
+        font-size: 30px;
+        font-weight: bold;
+        color: #ffffff;
+      }
+      .content-wrapper {
+        width: 75%;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      /* width */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      /* Track */
+      ::-webkit-scrollbar-track {
+        background: #26c6da;
+      }
+
+      /* Handle */
+      ::-webkit-scrollbar-thumb {
+        background: #4db6ac;
+      }
+
+      /* Handle on hover */
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      .menu-btn {
+        width: 100% !important;
+        height: 50px;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 12px;
+        text-shadow: 0px 0px 1px black;
+      }
+      .menu-btn:hover {
+        background: #4db6ac;
+      }
+      .col {
+        width: 110% !important;
+      }
+      .cln_lin {
+        width: 60% !important;
+      }
+      #nav {
+        background-color: #26c6da;
+        list-style-type: none;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+      }
+
+      #nav li {
+        display: inline-block;
+        font-size: 20px;
+        padding: 20px;
+      }
+      .pagination li.active {
+        background-color: #26a69a !important;
+        height: auto !important;
+      }
+      #char_container {
+        margin-top: 15%;
+      }
+      .highcharts-credits {
+        display: none;
+      }
+    </style>
+    <title>Data Reader</title>
+  </head>
+  <body>
+    <nav>
+      <!-- navigation -->
+      <div cldass="nav-wrapper">
+        <a href="#" class="dataset-heading"> {{ .Title }} </a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <!-- add menu options-->
+        </ul>
+      </div>
+    </nav>
+    <div class="content-wrapper">
+      <div class="tableBox"></div>
+
+      <div id="chartBox"></div>
+    </div>
+
+    <script>
+            var data = {{ .json }};
+            console.log(data);
+            // create table inside chartBox and append data
+            var table = document.createElement('table');
+            table.setAttribute('class', 'table');
+            // add more classes to table
+            table.setAttribute('class', 'highlight responsive-table');
+            var tbody = document.createElement('tbody');
+            table.appendChild(tbody);
+            var tr = document.createElement('tr');
+            tbody.appendChild(tr);
+            var th = document.createElement('th');
+            th.innerHTML = 'Address';
+            tr.appendChild(th);
+            var th = document.createElement('th');
+            th.innerHTML = 'Created At';
+            tr.appendChild(th);
+            var th = document.createElement('th');
+            th.innerHTML = 'Fiat';
+            tr.appendChild(th);
+            var th = document.createElement('th');
+            th.innerHTML = 'ID';
+            tr.appendChild(th);
+            var th = document.createElement('th');
+            th.innerHTML = 'Lat';
+            tr.appendChild(th);
+            var th = document.createElement('th');
+            th.innerHTML = 'Long';
+            tr.appendChild(th);
+            var th = document.createElement('th');
+            th.innerHTML = 'Prop ID';
+            tr.appendChild(th);
+            var th = document.createElement('th');
+            th.innerHTML = 'Type';
+            tr.appendChild(th);
+            var th = document.createElement('th');
+            th.innerHTML = 'UPX';
+            tr.appendChild(th);
+            // append table to chartBox
+            var chartBox = document.querySelector('.tableBox');
+            chartBox.appendChild(table);
+            // append data to table
+            for (var i = 0; i < data.length; i++) {
+              var tr = document.createElement('tr');
+              tbody.appendChild(tr);
+              var td = document.createElement('td');
+              td.innerHTML = data[i].Address;
+              tr.appendChild(td);
+              var td = document.createElement('td');
+              td.innerHTML = data[i].CreatedAt;
+              tr.appendChild(td);
+              var td = document.createElement('td');
+              td.innerHTML = data[i].Fiat;
+              tr.appendChild(td);
+              var td = document.createElement('td');
+              td.innerHTML = data[i].Id;
+              tr.appendChild(td);
+              var td = document.createElement('td');
+              td.innerHTML = data[i].Latitude;
+              tr.appendChild(td);
+              var td = document.createElement('td');
+              td.innerHTML = data[i].Longitude;
+              tr.appendChild(td);
+              var td = document.createElement('td');
+              td.innerHTML = data[i].PropId;
+              tr.appendChild(td);
+              var td = document.createElement('td');
+              td.innerHTML = data[i].Type;
+              tr.appendChild(td);
+              var td = document.createElement('td');
+              td.innerHTML = data[i].Upx;
+              tr.appendChild(td);
+            }
+
+
+
+            $.fn.SETNAV = function(opts) {
+                  //console.log("clean for nav")
+                  var $this = this,
+                  defaults = {
+                  perPage: 7,
+                  showPrevNext: false,
+                  hidePageNumbers: false,
+                  showLastPage: false,
+                  showFirstPage: true,
+                  },
+                  settings = $.extend(defaults, opts);
+
+                  //console.log(this)
+                  var listElement = $this;
+                  var perPage = settings.perPage;
+                  var children = listElement.children();
+                  var table_page = $("#nav");
+                  //console.log(children)
+                  if (typeof settings.childSelector != "undefined") {
+                  children = listElement.find(settings.childSelector);
+                  }
+
+                  if (typeof settings.table_pageSelector != "undefined") {
+                  console.log("setting default table page")
+                  table_page = $(settings.table_pageSelector);
+                  }
+
+                  var numItems = children.size();
+                  var numPages = Math.ceil(numItems / perPage);
+                  //console.log(numItems)
+                  //console.log(numPages)
+                  if (parseInt(numPages) == 1) {
+                  return;
+                  }
+
+                  $("#csv_reader").before("<blockquote>" + (numPages - 1) + " pages collected.</blockquote>");
+                  table_page.data("curr", 0);
+
+                  $('<li><p><span class="master_page">1</span></p></li>').appendTo(table_page);
+
+                  if (settings.showFirstPage) {
+                  $('<li><p><a href="#" class="first_page">First ...</a></p></li>').appendTo(
+                  table_page
+                  );
+                  }
+
+                  if (settings.showPrevNext) {
+                  $('<li><p><a href="#" class="prev_link"><<</a></p></li>').appendTo(table_page);
+                  }
+
+                  var curr = 0;
+                  while (numPages - 1 > curr && settings.hidePageNumbers == false) {
+                  $(
+                  '<li id="pg' +
+                  (curr + 1) +
+                  '" class="pg"><a href="#" class="page_link">' +
+                  (curr + 1) +
+                  "</a></li>"
+                  ).appendTo(table_page);
+                  curr++;
+                  }
+                  if (settings.showPrevNext) {
+                  $('<li><p><a href="#" class="next_link">>></a></p></li>').appendTo(table_page);
+                  }
+
+                  if (settings.showLastPage) {
+                  $('<li><p><a href="#" class="last_page">... Last page </a></p></li>').appendTo(
+                  table_page
+                  );
+                  }
+
+                  table_page.find("#pg1").addClass("active");
+                  table_page.find(".prev_link").hide();
+                  if (numPages <= 1) {
+                  table_page.find(".next_link").hide();
+                  }
+                  //table_page.children().eq(1).addClass("active");
+
+                  children.hide();
+                  children.slice(0, perPage).show();
+                  if (numPages > 3) {
+                  $(".pg").hide();
+                  $("#pg1,#pg2,#pg3").show();
+                  $("#pg" + numPages - 1).show();
+                  }
+
+                  table_page.find("p .page_link").click(function() {
+                  var clickedPage = $(this).html().valueOf() - 1;
+                  goTo(clickedPage, perPage);
+                  return false;
+                  });
+                  table_page.find("p .first_page").click(function() {
+                  goTo(0);
+                  });
+                  table_page.find("p .last_page").click(function() {
+                  page = (numPages - 1);
+                  goTo(numPages - 1);
+                  $(".master_page").text(page);
+                  });
+                  table_page.find("p .prev_link").click(function() {
+                  previous();
+                  return false;
+                  });
+                  table_page.find("p .next_link").click(function() {
+                  next();
+                  return false;
+                  });
+                  var goto_input = $(
+                  "<input id='goto_page' type='text' placeholder='Go to page number'/>"
+                  );
+
+                  goto_input.appendTo($(".returned"));
+                  goto_input.keyup(function(e) {
+                  var input = $(this).val();
+                  var toNum = parseInt(input);
+                  if (isNumber(toNum)) {
+                  if (toNum <= numPages - 1) {
+                  goTo(input);
+                  } else {
+                  console.warn("invalid page request");
+                  str = `Invalid page request. The please chose a page between 1 and ${
+                  numPages - 1
+                  }`;
+                  alert(str);
+                  goto_input.val("");
+                  $(".master_page").text("");
+                  }
+                  }
+                  });
+
+                  function getCurrentPage() {
+                  return null;
+                  }
+
+                  function previous() {
+                  var goToPage = parseInt(table_page.data("curr")) - 1;
+                  goTo(goToPage);
+                  }
+
+                  function next() {
+                  goToPage = parseInt(table_page.data("curr")) + 1;
+                  goTo(goToPage);
+                  }
+
+                  function goTo(page) {
+                  var startAt = page * perPage,
+                  endOn = startAt + perPage;
+                  $(".pg").hide();
+                  $(".dots").remove();
+                  var prevpg = $("#pg" + page).show();
+                  var currpg = $("#pg" + (page + 1)).show();
+                  var nextpg = $("#pg" + (page + 2)).show();
+                  if (prevpg.length == 0) nextpg = $("#pg" + (page + 3)).show();
+                  if (prevpg.length == 1 && nextpg.length == 0) {
+                  prevpg = $("#pg" + (page - 1)).show();
+                  }
+                  //if (curr > 3) {
+                  //    if (page > 1)
+                  //      prevpg.before($("<p class='dots'>").html("<span>...</span>"));
+                  //    if (page < curr - 2)
+                  //      nextpg.after($("<p class='dots'>").html("<span>...</span>"));
+                  //}
+                  currpg.addClass("active").siblings().removeClass("active");
+                  children.css("display", "none").slice(startAt, endOn).show();
+                  if (page >= 1) {
+                  table_page.find(".prev_link").show();
+                  } else {
+                  table_page.find(".prev_link").hide();
+                  }
+
+                  if (page < numPages - 1) {
+                  table_page.find(".next_link").show();
+                  } else {
+                  table_page.find(".next_link").hide();
+                  }
+
+                  table_page.data("curr", page);
+                  // set master number
+                  $(".master_page").text(page + 1);
+            }
+            };
+            $(".tableBox").after('<div class="pagination_master"><div class="pagination pagination-lg pager" id="nav"></div></div>');
+                  $("tbody").SETNAV({
+                      table_pageSelector: "#nav",
+                      showPrevNext: true,
+                      hidePageNumbers: false,
+                      perPage: 20,
+                      showLastPage: true,
+                  });
+
+                  Highcharts.chart('chartBox', {
+                        data: {
+                        table: 'tbody'
+                        },
+                        chart: {
+                        backgroundColor: '#26c6da',
+                        type: 'line'
+                        },
+                        title: {
+                        text: 'Graph'
+                        },
+                        yAxis: {
+                        allowDecimals: false,
+                        title: {
+                        text: 'Data-Set'
+                        }
+                        },
+                        xAxis: {
+                        title: {
+                        text: 'LUCID-GARY'
+                        },
+                        labels: {
+                        enabled: false
+                        }
+                      },
+      });
+    </script>
+  </body>
+</html>
