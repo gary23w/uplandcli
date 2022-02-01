@@ -27,21 +27,64 @@ see configuration for more details.
 
 ## Basic Commands
 
-```shell
-go run main.go upland --help
-```
-
-collects and displays the data within a TermUI interface.
+~upland~
 
 ```
-go run main.go upland --collect
+++UPLD-CLI UPLAND++
+========================
+The UPLD-PIPELINE will query from the blockchain and collect data related
+to Upland properties. This data will be used to populate the CLI based user interface.
+
+Example:
+upldcli upland --collect
+upldcli upland --live
+upldcli upland --live -a  // run API in async mode
+upldcli upland --live -a -b  // run API in async mode and bypass database connections
+
+The UPLD-PIPELINE will also scrape the Upland website and collect data via a headless browser.
+using chromedp and chromedp-go for headless browsing. This is a future implementation, and should be available soon.
+
+Usage:
+uplandcli upland [flags]
+
+Flags:
+-a, --api       run API in async mode
+-b, --bypass    bypass database connections and inserts
+-d, --collect   will get all of the recent properties listed for sale.
+-h, --help      help for upland
+-q, --live      live mode which tails collected data in your shell.
 ```
 
-collects and tails the data in your shell.
+~database~
 
 ```
-go run main.go upland --live
+++UPLD-DB UPLAND++
+========================
+The DB command is used to setup and initialize a postgresql database on heroku.
 
+Usage:
+uplandcli database [flags]
+
+Flags:
+-q, --check     checks to see if a database is already active
+-d, --deploy    will setup a postgresql database on heroku
+-u, --destroy   will attempt to destroy the database
+-h, --help      help for database
+```
+
+~api~
+
+```
+++UPLD-DB UPLAND++
+========================
+The api command is used to deploy a crud api to interact with the database.
+
+Usage:
+uplandcli api [flags]
+
+Flags:
+-d, --deploy   will initialize a crud api to interact with the database
+-h, --help     help for api
 ```
 
 ## Configuration
