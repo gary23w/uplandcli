@@ -2,7 +2,7 @@ package root
 
 import (
 	api "eos_bot/api/props_crud"
-	uiInt "eos_bot/cmd/interface"
+	uiInt "eos_bot/cmd/interface_main"
 	"eos_bot/internal/live"
 
 	"github.com/spf13/cobra"
