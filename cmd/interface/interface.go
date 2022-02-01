@@ -1,4 +1,4 @@
-package root
+package interface
 
 import (
 	"eos_bot/internal/models"

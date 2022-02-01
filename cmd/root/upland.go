@@ -2,6 +2,7 @@ package root
 
 import (
 	api "eos_bot/api/props_crud"
+	uiInt "eos_bot/cmd/interface"
 	"eos_bot/internal/live"
 
 	"github.com/spf13/cobra"
@@ -47,7 +48,7 @@ func init() {
 
 func UplandPipeline(cmd *cobra.Command, args []string) {
 		if dt {
-			TermUIpanel("Collecting data from blockchain", bypass)
+			uiInt.TermUIpanel("Collecting data from blockchain", bypass)
 		}
 		if qt {
 			if apiq {
