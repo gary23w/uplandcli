@@ -64,18 +64,20 @@ func CreateTables() {
 func AddPropertiesToDatabase(properties []models.DataPackageBLOCK) {
 	usr := getPostgresCredentials()
 	db := connectToDatabase()
-	defer db.Close()
-	CreateTables() // if table doesn't exist, create it
-	if usr.RowLoad < 10000 {
-		for _, value := range properties {
-			_, err := db.Exec(fmt.Sprintf("INSERT INTO properties (type, prop_id, address, latitude, longitude, upx, fiat) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s') ON CONFLICT (ID) DO NOTHING", value.Type, value.ID, value.Address, value.Lat, value.Long, value.UPX, value.FIAT))
-			if err != nil {
-				log.Fatal(err)
-			}
-			usr.RowLoad = usr.RowLoad + 1
+	defer db.Close() 
+	CreateTables()
+	if usr.RowLoad >= 10000 {
+			log.Println("Row load limit reached, DATABASE RESETTING...")		
+			newDb := writeNewName()
+			log.Printf("New database name: upland-cli-%s \n", newDb)
+			DeployHeroku(newDb)
+	} 
+	for _, value := range properties {
+		_, err := db.Exec(fmt.Sprintf("INSERT INTO properties (type, prop_id, address, latitude, longitude, upx, fiat) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s') ON CONFLICT (ID) DO NOTHING", value.Type, value.ID, value.Address, value.Lat, value.Long, value.UPX, value.FIAT))
+		if err != nil {
+			log.Fatal(err)
 		}
-	} else {
-		log.Println("Row load limit reached, DATABASE OFFLINE...")
+		usr.RowLoad = usr.RowLoad + 1
 	}
 	fmt.Println("[*] Rows loaded: ", usr.RowLoad)
 	setLoadVar(usr)

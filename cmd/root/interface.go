@@ -13,7 +13,7 @@ import (
 )
 
 
-func TermUIpanel(ty string) {
+func TermUIpanel(ty string, bypass bool) {
 	var check string
 	for loop := true; loop; {
 		if err := ui.Init(); err != nil {
@@ -24,7 +24,7 @@ func TermUIpanel(ty string) {
 
 		var newRows []string
 		var data []models.DataPackageBLOCK
-		data = req.CollectJsonFromAPI()
+		data = req.CollectJsonFromAPI(bypass)
 		// loop through data list
 		for _, v := range data {
 			var l string

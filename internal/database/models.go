@@ -2,12 +2,16 @@ package database
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"os"
+	"strings"
 )
 
 type UserCredentials struct {
+	Cur_Name string
 	Url      string
 	PSQLurl  string
 	User     string
@@ -18,8 +22,18 @@ type UserCredentials struct {
 	RowLoad  int
 }
 
+func writeNewName() string {
+	var randChar string
+		for i := 0; i < 7; i++ {
+			randChar = randChar + string(rune(65+rand.Intn(25)))
+		}
+		name := fmt.Sprintf("upl%s", strings.ToLower(randChar))
+		return name
+}
+
 func writeConfigFiles(userJson UserCredentials, userConf string) {
 	// write user credentials to database json file
+	log.Println("Writing user credentials to database json file")
 	json_file, err := json.MarshalIndent(userJson, "", "    ")
 	if err != nil {
 		log.Fatal(err)
@@ -41,6 +55,7 @@ func writeConfigFiles(userJson UserCredentials, userConf string) {
 	`
 
 	// write string to config file
+	log.Println("Writing config file for API")
 	err = ioutil.WriteFile("./conf/app.conf", []byte(myConf), 0644)
 	if err != nil {
 		log.Fatal(err)

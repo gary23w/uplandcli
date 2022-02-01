@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	beego "eos_bot/api/props_crud/web"
+	beego "github.com/beego/beego/v2/server/web"
 )
 
 // PropertiesController operations for Properties

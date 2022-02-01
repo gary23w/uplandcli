@@ -1,8 +1,9 @@
 package root
 
 import (
-	"eos_bot/internal/live"
 	api "eos_bot/api/props_crud"
+	"eos_bot/internal/live"
+
 	"github.com/spf13/cobra"
 )
 	
@@ -10,6 +11,7 @@ var (
 	dt bool = false
 	qt bool = false
 	apiq bool = false
+	bypass bool = false
 )
 
 func NewUPLDCmd() *cobra.Command {
@@ -25,6 +27,7 @@ return &cobra.Command{
 			upldcli upland --collect 
 			upldcli upland --live
 			upldcli upland --live -a  // run API in async mode
+			upldcli upland --live -a -b  // run API in async mode and bypass database connections
 		
 		The UPLD-PIPELINE will also scrape the Upland website and collect data via a headless browser.
 		using chromedp and chromedp-go for headless browsing. This is a future implementation, and should be available soon.`,
@@ -37,19 +40,19 @@ func init() {
 	upldCmd.Flags().BoolVarP(&dt, "collect", "d", false, "will get all of the recent properties listed for sale.")
 	upldCmd.Flags().BoolVarP(&qt, "live", "q", false, "live mode which tails collected data in your shell.")
 	upldCmd.Flags().BoolVarP(&apiq, "api", "a", false, "run API in async mode")
+	upldCmd.Flags().BoolVarP(&bypass, "bypass", "b", false, "bypass database connections and inserts")
 
 	RootCmd.AddCommand(upldCmd)
 }
 
 func UplandPipeline(cmd *cobra.Command, args []string) {
-		// go api.StartAPI()
 		if dt {
-			TermUIpanel("Collecting data from blockchain")
+			TermUIpanel("Collecting data from blockchain", bypass)
 		}
 		if qt {
 			if apiq {
 				go api.StartAPI()
 			}
-			live.TailDatabaseTables()
+			live.TailDatabaseTables(bypass)
 		}
 }

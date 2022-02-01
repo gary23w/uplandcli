@@ -8,10 +8,10 @@ import (
 	"eos_bot/internal/req"
 )
 
-func TailDatabaseTables() { 
+func TailDatabaseTables(bypass bool) { 
 	var data []models.DataPackageBLOCK
 	for {
-		data = req.CollectJsonFromAPI()
+		data = req.CollectJsonFromAPI(bypass)
 			for _, v := range data {
 				var l string
 				if v.Type != "NULL-DATA" {

@@ -3,7 +3,7 @@ package routers
 import (
 	"eos_bot/api/props_crud/controllers"
 
-	beego "eos_bot/api/props_crud/web"
+	beego "github.com/beego/beego/v2/server/web"
 )
 
 func init() {

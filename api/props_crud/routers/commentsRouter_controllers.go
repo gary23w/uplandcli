@@ -1,7 +1,7 @@
 package routers
 
 import (
-	beego "eos_bot/api/props_crud/web"
+	beego "github.com/beego/beego/v2/server/web"
 
 	"github.com/beego/beego/v2/server/web/context/param"
 )

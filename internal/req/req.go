@@ -10,6 +10,10 @@ import (
 	"eos_bot/internal/database"
 )
 
+type EOSHTTP struct {
+
+}
+
 func httpClient(req *http.Request) (string, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -69,8 +73,6 @@ func httpEOSRespParser(req models.APIRespBlockchain) []models.DataPackageBLOCK {
 			})
 		}
 	}
-	// add list to database
-	database.AddPropertiesToDatabase(myList)
 	if len(myList) == 0 {
 		myList = append(myList, models.DataPackageBLOCK{
 			Type: "NULL-DATA",
@@ -80,12 +82,11 @@ func httpEOSRespParser(req models.APIRespBlockchain) []models.DataPackageBLOCK {
 	return myList
 }
 
-func CollectJsonFromAPI() [] models.DataPackageBLOCK {
-	// do basic request
+func CollectJsonFromAPI(bypass bool) [] models.DataPackageBLOCK {
 	respObj := httpEOSBasicRequest()
-	// parse response
 	parseDetails := httpEOSRespParser(respObj)
-	// more data manipulation?
-	//////
+	if !bypass && parseDetails[0].Type != "NULL-DATA" {
+		database.AddPropertiesToDatabase(parseDetails)
+	}
 	return parseDetails
 }

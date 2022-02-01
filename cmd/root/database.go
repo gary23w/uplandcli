@@ -35,7 +35,7 @@ func init() {
 
 func DBroutes(cmd *cobra.Command, args []string) {
 	if ht {
-		db.DeployHeroku()
+		db.DeployHeroku("upland-cli")
 	}
 	if dtt {
 		db.DestroyPostgres()
