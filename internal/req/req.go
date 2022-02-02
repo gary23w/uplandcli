@@ -40,7 +40,7 @@ func httpEOSBasicRequest() models.APIRespBlockchain {
 			if err != nil {
 				log.Fatal(err)
 			}
-			time.Sleep(time.Second * 3)
+			time.Sleep(time.Second * 5)
 		} else {
 			log.Println("Throttling...")
 			time.Sleep(time.Second * 1)

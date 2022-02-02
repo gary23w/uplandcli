@@ -4,6 +4,7 @@ import (
 	"eos_bot/internal/req"
 	"fmt"
 	"log"
+	"math"
 	"regexp"
 	"strconv"
 	"time"
@@ -19,9 +20,11 @@ func TermUIGrid(bypass bool) {
 	}
 	defer ui.Close()
 
-	stringMachine := func() ([]string, []float64) {
+	stringMachine := func() ([]string, []float64, []string) {
 		var data []string
 		var newFloats []float64
+		var isFiat []string
+		data = append(data, "------------------------------------------------------")
 		newData := req.CollectJsonFromAPI(bypass)
 		for _, v := range newData {
 			var l string
@@ -33,6 +36,15 @@ func TermUIGrid(bypass bool) {
 			data = append([]string{l}, data...)
 			myFloat := regexp.MustCompile(`\d+\.\d+`)
 			getFloat := myFloat.FindString(v.UPX)
+			getFloatFIAT := myFloat.FindString(v.FIAT)
+			newFiat, err := strconv.ParseFloat(getFloatFIAT, 64)
+			if err != nil {
+				log.Println("Error converting FIAT to float64")
+			} else {
+				if newFiat > 0 {
+					isFiat = append([]string{l}, isFiat... )
+				}
+			}
 			f, err := strconv.ParseFloat(getFloat, 64)
 			if err != nil {
 				log.Println("Error converting UPX to float64")
@@ -40,10 +52,10 @@ func TermUIGrid(bypass bool) {
 				newFloats = append(newFloats, f)
 			}
 		}
-		return data, newFloats
+		return data, newFloats, isFiat
 	}
 	
-	data1, _ := stringMachine()
+	data1, _, _ := stringMachine()
 
 	lc := widgets.NewBarChart()
 	lc.Title = "Trends"
@@ -58,6 +70,16 @@ func TermUIGrid(bypass bool) {
 	l.TextStyle = ui.NewStyle(ui.ColorYellow)
 	l.WrapText = false
 
+	pc := widgets.NewPieChart()
+	pc.Title = "Pie Chart"
+	pc.AngleOffset = -.5 * math.Pi
+
+	l2 := widgets.NewList()
+	l2.Title = "FIAT props"
+	l2.TextStyle = ui.NewStyle(ui.ColorYellow)
+	l2.WrapText = false
+
+
 
 	grid := ui.NewGrid()
 	termWidth, termHeight := ui.TerminalDimensions()
@@ -67,9 +89,14 @@ func TermUIGrid(bypass bool) {
 
 	grid.Set(
 
-		ui.NewRow(2.0/2,
-			ui.NewCol(1.0/3, lc),
+		ui.NewRow(2.0/3,
+			ui.NewCol(1.0/4, lc),
 			ui.NewCol(1.0/2, l),
+			ui.NewCol(1.0/4, pc),
+
+		),
+		ui.NewRow(1.0/1,
+			ui.NewCol(1.0/1, l2),
 		),
 	)
 	ui.Render(grid)
@@ -107,9 +134,18 @@ func TermUIGrid(bypass bool) {
 
 		case <-ticker:
 			go func() {
-				data1, data2 := stringMachine()
+				data1, data2, isFiat := stringMachine()
 				if len(data2) > 0 {
-					lc.Data = append(lc.Data, data2...)
+					if len(lc.Data) >= 3 && len(lc.Data) < 5 {
+						lc.Data = append(lc.Data[:3], data2...)
+						pc.Data = append(pc.Data[:3], data2...)
+					} else {
+						lc.Data = data2
+						pc.Data = data2
+					}
+				}
+				if len(isFiat) > 0 {
+					l2.Rows = append(l2.Rows, isFiat...)
 				}
 				l.Rows = append(data1, l.Rows...)	
 			}()
