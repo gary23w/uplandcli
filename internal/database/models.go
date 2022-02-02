@@ -38,7 +38,7 @@ func writeConfigFiles(userJson UserCredentials, userConf string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = ioutil.WriteFile("./conf/database.json", json_file, 0644)
+	err = os.WriteFile("./conf/database.json", json_file, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -56,7 +56,7 @@ func writeConfigFiles(userJson UserCredentials, userConf string) {
 
 	// write string to config file
 	log.Println("Writing config file for API")
-	err = ioutil.WriteFile("./conf/app.conf", []byte(myConf), 0644)
+	err = os.WriteFile("./conf/app.conf", []byte(myConf), 0644)
 	if err != nil {
 		log.Fatal(err)
 	}

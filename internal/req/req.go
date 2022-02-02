@@ -6,12 +6,14 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 
 	"eos_bot/internal/database"
 )
 
-type EOSHTTP struct {
-
+func IsJSON(str string) bool {
+    var js json.RawMessage
+    return json.Unmarshal([]byte(str), &js) == nil
 }
 
 func httpClient(req *http.Request) (string, error) {
@@ -33,10 +35,17 @@ func httpEOSBasicRequest() models.APIRespBlockchain {
 			log.Fatal(err)
 		}
 		res, err := httpClient(req)
-		err = json.Unmarshal([]byte(res), &RespObj)
-		if err != nil {
-			log.Fatal(err)
+		if IsJSON(string(res)) {
+			err = json.Unmarshal([]byte(res), &RespObj)
+			if err != nil {
+				log.Fatal(err)
+			}
+			time.Sleep(time.Second * 3)
+		} else {
+			log.Println("Throttling...")
+			time.Sleep(time.Second * 1)
 		}
+		
 		return RespObj
 }
 

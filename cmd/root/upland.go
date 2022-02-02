@@ -48,7 +48,9 @@ func init() {
 
 func UplandPipeline(cmd *cobra.Command, args []string) {
 		if dt {
-			uiInt.TermUIpanel("Collecting data from blockchain", bypass)
+			//uiInt.TermUIpanel("Collecting data from blockchain", bypass)
+			SetLogs("[UPLD-CLI] USING TERM UI. LIVE MODE DISABLED")
+			uiInt.TermUIGrid(bypass)
 		}
 		if qt {
 			if apiq {

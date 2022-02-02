@@ -100,20 +100,14 @@ func DestroyPostgres() {
 
 func DeployHeroku(name string) {
 	nameQuoted := fmt.Sprintf("%v", name)
-    loginHeroku()
-	var build string
-	log.Println("Setup a postgres instance within heroku? (y/n)")
-	fmt.Scanln(&build)
-	if build == "y" {
-		log.Println("Building postgres instance with name: " + nameQuoted)
-		buildPostgres(nameQuoted)
-	}
+    loginHeroku()	
+	log.Println("Building postgres instance with name: " + nameQuoted)
+	buildPostgres(nameQuoted)
 	log.Println("[*] Waiting for service to come online...")
 	var bar utils.Bar
 	bar.NewOption(0, 100)
 	for i := 0; i <= 100; i++ {
-		// sleep for half a second
-		time.Sleep(time.Millisecond * 500)
+		time.Sleep(time.Millisecond * 800)
 		bar.Play(int64(i))
 	}
 	bar.Finish()

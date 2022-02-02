@@ -9,9 +9,10 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var creds UserCredentials = getPostgresCredentials()
+//var creds UserCredentials = getPostgresCredentials()
 
 func connectToDatabase() *sql.DB {
+	creds := getPostgresCredentials()
 	psql := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=require", creds.Host, creds.Port, creds.User, creds.Password, creds.Database)
 	db, err := sql.Open("postgres", psql)
 	if err != nil {
@@ -80,7 +81,7 @@ func AddPropertiesToDatabase(properties []models.DataPackageBLOCK) {
 		}
 		usr.RowLoad = usr.RowLoad + 1
 	}
-	fmt.Println("[*] Rows loaded: ", usr.RowLoad)
+	log.Println("[*] Rows loaded: ", usr.RowLoad)
 	setLoadVar(usr)
 }
 
