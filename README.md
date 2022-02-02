@@ -166,3 +166,7 @@ Ensure that both godoc and godoc-static are installed.
 
 - EOS Hyperion
   - https://eos.hyperion.eosrio.io
+
+## Captures
+
+![working term user interface!](readme_block_capture.png "a working interface.")
