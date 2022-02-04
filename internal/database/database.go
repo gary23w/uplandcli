@@ -9,43 +9,31 @@ import (
 	_ "github.com/lib/pq"
 )
 
-//var creds UserCredentials = getPostgresCredentials()
+type EOSDatabaseManager struct {
+	db *sql.DB
+	creds UserCredentials
+}
 
-func connectToDatabase() *sql.DB {
-	creds := getPostgresCredentials()
-	psql := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=require", creds.Host, creds.Port, creds.User, creds.Password, creds.Database)
+func (x *EOSDatabaseManager) SetCredentials() {
+	x.creds = getPostgresCredentials()
+}
+
+func (x *EOSDatabaseManager) ConnectToDatabase() {
+	psql := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=require", x.creds.Host, x.creds.Port, x.creds.User, x.creds.Password, x.creds.Database)
 	db, err := sql.Open("postgres", psql)
 	if err != nil {
 		log.Fatal(err)
 	}
     err = db.Ping()
 	if err != nil {
-		//log.Fatal(err)
 		log.Fatal("Database connection failed. Please run 'upld database --deploy' for more details.")
 	}
-	return db
+	
+	x.db = db
 }
 
-func CreateCookieTable() {
-	db := connectToDatabase()
-	defer db.Close()
-	_, err := db.Exec(`
-	CREATE TABLE IF NOT EXISTS session (
-		session_key char(64) NOT NULL,
-		session_data bytes,
-		session_expiry timestamp NOT NULL DEFAULT NOW()
-		CONSTRAINT session_key PRIMARY KEY(session_key)
-		);
-	`)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func CreateTables() {
-	db := connectToDatabase()
-	defer db.Close()
-	_, err := db.Exec(`
+func(x *EOSDatabaseManager) CreateTables() {
+	_, err := x.db.Exec(`
 	CREATE TABLE IF NOT EXISTS properties (
 		id SERIAL PRIMARY KEY,
 		type VARCHAR(255) NOT NULL,
@@ -63,30 +51,49 @@ func CreateTables() {
 	}
 }
 
-func AddPropertiesToDatabase(properties []models.DataPackageBLOCK) {
-	usr := getPostgresCredentials()
-	CreateTables()
-	db := connectToDatabase()
-	defer db.Close() 
+func EOSDatabaseMan(route string, model []models.DataPackageBLOCK) {
+	log.Println("[*] DATABASEMANAGER: ", route)
+	var x EOSDatabaseManager	
+	x.SetCredentials()
+	x.ConnectToDatabase()
+	x.CreateTables()
+	usr := x.creds
 	if usr.RowLoad >= 10000 {
 			log.Println("Row load limit reached, DATABASE RESETTING...")		
 			newDb := writeNewName()
 			log.Printf("New database name: upland-cli-%s \n", newDb)
 			DeployHeroku(newDb)
 	} 
+	switch route {
+		case "add":
+			x.AddPropertyList(model)
+			break
+		case "remove":
+			log.Println("TODO: add removal of properties")
+			break
+		case "update":
+			log.Println("TODO: add update of properties")
+			break
+		default:
+			log.Println("Invalid route in database manager")
+	}
+}
+
+func (x *EOSDatabaseManager) AddPropertyList (properties []models.DataPackageBLOCK) {
+	db := x.db
+	defer db.Close()
 	for _, value := range properties {
 		_, err := db.Exec(fmt.Sprintf("INSERT INTO properties (type, prop_id, address, latitude, longitude, upx, fiat) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s') ON CONFLICT (ID) DO NOTHING", value.Type, value.ID, value.Address, value.Lat, value.Long, value.UPX, value.FIAT))
 		if err != nil {
 			log.Fatal(err)
 		}
-		usr.RowLoad = usr.RowLoad + 1
+		x.creds.RowLoad = x.creds.RowLoad + 1
 	}
-	log.Println("[*] Rows loaded: ", usr.RowLoad)
-	setLoadVar(usr)
+	setLoadVar(x.creds)
 }
 
-func GetPropertiesFromDatabase() {
-	db := connectToDatabase()
+func (x *EOSDatabaseManager) GetPropertiesFromDatabase() {
+	db := x.db
 	defer db.Close()
 	rows, err := db.Query("SELECT * FROM properties")
 	if err != nil {

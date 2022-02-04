@@ -7,5 +7,3 @@ import (
 func main() {
 	root.ExecuteCLI()
 }
-
-// the end

@@ -14,7 +14,7 @@ import (
 	"github.com/gizak/termui/v3/widgets"
 )
 
-func TermUIGrid(bypass bool) { 
+func TermUIGrid(bypassed bool) { 
 	if err := ui.Init(); err != nil {
 		log.Fatalf("failed to initialize termui: %v", err)
 	}
@@ -24,8 +24,10 @@ func TermUIGrid(bypass bool) {
 		var data []string
 		var newFloats []float64
 		var isFiat []string
+		var EOSHttpReq req.EOSHTTPREQ
+		EOSHttpReq.Bypass_sql = bypassed
+		newData := EOSHttpReq.CollectJsonFromAPI()
 		data = append(data, "------------------------------------------------------")
-		newData := req.CollectJsonFromAPI(bypass)
 		for _, v := range newData {
 			var l string
 			if v.Type != "NULL-DATA" {

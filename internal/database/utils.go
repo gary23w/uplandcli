@@ -10,18 +10,6 @@ import (
 	"strings"
 )
 
-type UserCredentials struct {
-	Cur_Name string
-	Url      string
-	PSQLurl  string
-	User     string
-	Password string
-	Host     string
-	Port     string
-	Database string
-	RowLoad  int
-}
-
 func writeNewName() string {
 	var randChar string
 		for i := 0; i < 7; i++ {

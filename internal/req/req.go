@@ -9,52 +9,50 @@ import (
 	"time"
 
 	"eos_bot/internal/database"
+	"eos_bot/internal/utils"
 )
 
-func IsJSON(str string) bool {
-    var js json.RawMessage
-    return json.Unmarshal([]byte(str), &js) == nil
+type EOSHTTPREQ struct {
+	Bypass_sql bool
 }
 
-func httpClient(req *http.Request) (string, error) {
+func (x *EOSHTTPREQ) HttpClient(req *http.Request) (string, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer resp.Body.Close()
-	// read response
 	body, _ := ioutil.ReadAll(resp.Body)
 	return string(body), nil
 }
 
-func httpEOSBasicRequest() models.APIRespBlockchain {
+func (x *EOSHTTPREQ) HttpEOSBasicRequest() models.APIRespBlockchain {
 		var RespObj models.APIRespBlockchain
 		req, err := http.NewRequest("GET", "https://eos.hyperion.eosrio.io/v2/history/get_actions?account=playuplandme&skip=0&limit=100&sort=desc", nil)
 		if err != nil {
 			log.Fatal(err)
 		}
-		res, err := httpClient(req)
-		if IsJSON(string(res)) {
+		res, err := x.HttpClient(req)
+		if utils.IsJSON(string(res)) {
 			err = json.Unmarshal([]byte(res), &RespObj)
 			if err != nil {
 				log.Fatal(err)
 			}
 			time.Sleep(time.Second * 5)
 		} else {
-			log.Println("Throttling...")
 			time.Sleep(time.Second * 1)
 		}
 		
 		return RespObj
 }
 
-func httpEOSgetAddress(prop_id string) models.UplandPropData {
+func (x *EOSHTTPREQ) HttpEOSgetAddress(prop_id string) models.UplandPropData {
 	req, err := http.NewRequest("GET", "https://api.upland.me/properties/" + prop_id, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
-	res, err := httpClient(req)
+	res, err := x.HttpClient(req)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -66,11 +64,11 @@ func httpEOSgetAddress(prop_id string) models.UplandPropData {
 	return PropData
 }
 
-func httpEOSRespParser(req models.APIRespBlockchain) []models.DataPackageBLOCK {
+func (x *EOSHTTPREQ) HttpEOSRespParser(req models.APIRespBlockchain) []models.DataPackageBLOCK {
 	var myList []models.DataPackageBLOCK
 	for _, v := range req.Actions {
 		if v.Act.Name == "n2" {
-			PropData := httpEOSgetAddress(v.Act.Data.A45)
+			PropData := x.HttpEOSgetAddress(v.Act.Data.A45)
 			myList = append(myList, models.DataPackageBLOCK{
 				Type: v.Act.Name,
 				ID: v.Act.Data.A45,
@@ -91,11 +89,11 @@ func httpEOSRespParser(req models.APIRespBlockchain) []models.DataPackageBLOCK {
 	return myList
 }
 
-func CollectJsonFromAPI(bypass bool) [] models.DataPackageBLOCK {
-	respObj := httpEOSBasicRequest()
-	parseDetails := httpEOSRespParser(respObj)
-	if !bypass && parseDetails[0].Type != "NULL-DATA" {
-		database.AddPropertiesToDatabase(parseDetails)
+func (x *EOSHTTPREQ) CollectJsonFromAPI() [] models.DataPackageBLOCK {
+	respObj := x.HttpEOSBasicRequest()
+	parseDetails := x.HttpEOSRespParser(respObj)
+	if !x.Bypass_sql && parseDetails[0].Type != "NULL-DATA" {
+		database.EOSDatabaseMan("add", parseDetails)
 	}
 	return parseDetails
 }

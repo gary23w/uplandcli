@@ -8,10 +8,12 @@ import (
 	"eos_bot/internal/req"
 )
 
-func TailDatabaseTables(bypass bool) { 
+func TailDatabaseTables(bypassed bool) { 
 	var data []models.DataPackageBLOCK
 	for {
-		data = req.CollectJsonFromAPI(bypass)
+		var EOSHttpReq req.EOSHTTPREQ
+		EOSHttpReq.Bypass_sql = bypassed
+		data = EOSHttpReq.CollectJsonFromAPI()
 			for _, v := range data {
 				var l string
 				if v.Type != "NULL-DATA" {
