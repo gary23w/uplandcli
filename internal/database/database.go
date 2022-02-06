@@ -2,9 +2,10 @@ package database
 
 import (
 	"database/sql"
-	"eos_bot/internal/models"
 	"fmt"
 	"log"
+
+	"github.com/gary23w/uplandcli/internal/models"
 
 	_ "github.com/lib/pq"
 )
@@ -52,7 +53,6 @@ func(x *EOSDatabaseManager) CreateTables() {
 }
 
 func EOSDatabaseMan(route string, model []models.DataPackageBLOCK) {
-	log.Println("[*] DATABASEMANAGER: ", route)
 	var x EOSDatabaseManager	
 	x.SetCredentials()
 	x.ConnectToDatabase()

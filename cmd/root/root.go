@@ -33,7 +33,7 @@ fmt.Printf("Setting up UPLD-CLI-%v: \n", Version)
 config := zap.Config{}
 //config.Level.SetLevel(zap.NewAtomicLevelAt(zap.DebugLevel))
 //configure the logger
-jsonfile, err := os.Open("utils/logging.json")
+jsonfile, err := os.Open("conf/logging.json")
 	if err != nil {
 		log.Fatalln("Couldn't open the json file", err)
 		return err

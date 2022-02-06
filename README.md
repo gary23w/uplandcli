@@ -1,4 +1,4 @@
-# UPLAND CLI
+# UPLANDCLI
 
 [![GoDev](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://dothissomeday.com)
 
@@ -12,18 +12,6 @@ You must have the following versions of Node.js, npm, and Go installed:
 - ~~NPM: [npm](https://www.npmjs.com/) > v6.14.x~~ currently not required
 
 - Go: [Go](https://golang.org/doc/install) > v1.16.x
-
-## Database
-
-Currently setup to deploy a postgresql database onto heroku.
-
-_Make sure you are signed into heroku frst._
-
-```
-go run main.go database --deploy
-```
-
-see configuration for more details.
 
 ## Basic Commands
 
@@ -87,10 +75,25 @@ Flags:
 -h, --help     help for api
 ```
 
+## Database
+
+A heroku wrapper is in place to deploy a POSTGRES db.
+
+_Make sure you are signed into heroku frst._
+
+Then try to run.
+
+```
+go run main.go database --deploy
+```
+
 ## Configuration
 
 the current collection methods rely on a **POSTGRES** database.
-Update utils/database.json if you choose to use your own data center.
+
+To configure the collection system, a database.json file must be found within the **_conf/_** directory.
+
+- Example:
 
 ```
 {
@@ -101,6 +104,54 @@ Update utils/database.json if you choose to use your own data center.
     "Host": "<DB HOST>",
     "Port": "<PORT>",
     "Database": "<DATABASE>"
+}
+```
+
+This system also uses a .conf file to configure the API. this file should be found within the **_conf/_** directory.
+
+- Example:
+
+```
+	appname = MYAPPNAME
+	httpport = 1337
+	runmode = dev
+	autorender = false
+	copyrequestbody = true
+	EnableDocs = true
+	sqlconn = postgres://<username>:<password>@<ip>:<port>/<database>?sslmode=require
+```
+
+an example logging.json file should be found within the **_conf/_** directory.
+
+- Example:
+
+```
+{
+  "level": "info",
+  "encoding": "console",
+  "outputPaths": ["stdout", "tmp/logs"],
+  "errorOutputPaths": ["tmp/errorlogs"],
+  "initialFields": { "initFieldKey": "fieldValue" },
+  "encoderConfig": {
+    "messageKey": "message",
+    "levelKey": "level",
+    "nameKey": "logger",
+    "timeKey": "time",
+    "callerKey": "logger",
+    "stacktraceKey": "stacktrace",
+    "callstackKey": "callstack",
+    "errorKey": "error",
+    "timeEncoder": "iso8601",
+    "fileKey": "file",
+    "levelEncoder": "capitalColor",
+    "durationEncoder": "second",
+    "callerEncoder": "full",
+    "nameEncoder": "full",
+    "sampling": {
+      "initial": "3",
+      "thereafter": "10"
+    }
+  }
 }
 ```
 
@@ -123,26 +174,12 @@ GET /upland/properties       | Get properties from database.
 
 ---
 
-You can also view the data in an html table format.
+You can also view the data from your web browser.
 Simply fire up the API and go to:
 
 `http://127.0.0.1:1337/upland/properties/analysis`
 
-in your browser. Data here is pulled in DESC order. Meaning that whichever is at the top of the list will be the most recently collected data.
-
-## Generated Documentation
-
-To generate the documentation, run the following command:
-
-```shell
-godoc-static -destination=docs ./
-cd docs && python -m http.server 8000
-```
-
-Ensure that both godoc and godoc-static are installed.
-
-- `go get -d code.rocketnine.space/tslocum/godoc-static`
-- `go get -d golang.org/x/tools/cmd/godoc`
+Data here is pulled in DESC order. Meaning that whichever is at the top of the list will be the most recently collected.
 
 ## Built With
 

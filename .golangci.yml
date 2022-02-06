@@ -1,0 +1,3 @@
+linters:
+  # https://golangci-lint.run/usage/linters
+  enable-all: true

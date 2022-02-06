@@ -3,7 +3,7 @@ package root
 import (
 	"fmt"
 
-	db "eos_bot/internal/database"
+	db "github.com/gary23w/uplandcli/internal/database"
 
 	"github.com/spf13/cobra"
 )

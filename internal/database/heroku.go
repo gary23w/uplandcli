@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"eos_bot/internal/utils"
+	"github.com/gary23w/uplandcli/internal/models"
 )
 
 type UserCredentials struct {
@@ -122,7 +122,7 @@ func DeployHeroku(name string) {
 	log.Println("Building postgres instance with name: " + nameQuoted)
 	sys.BuildPostgres()
 	log.Println("[*] Waiting for service to come online...")
-	var bar utils.Bar
+	var bar models.Bar
 	bar.NewOption(0, 100)
 	for i := 0; i <= 100; i++ {
 		time.Sleep(time.Millisecond * 800)

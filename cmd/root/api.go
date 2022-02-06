@@ -1,7 +1,7 @@
 package root
 
 import (
-	api "eos_bot/api/props_crud"
+	api "github.com/gary23w/uplandcli/internal/api/cmd"
 
 	"github.com/spf13/cobra"
 )

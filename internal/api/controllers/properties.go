@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"encoding/json"
-	models "eos_bot/api/props_crud/models_api"
 	"errors"
 	"strconv"
 	"strings"
+
+	models "github.com/gary23w/uplandcli/internal/api/modelsAPI"
 
 	beego "github.com/beego/beego/v2/server/web"
 )
@@ -173,7 +174,7 @@ func (c *PropertiesController) Delete() {
 // @Title GetAnalytics
 // @Description get analytics
 // @Success 200 {object} models.Properties
-func (c *PropertiesController) GetAnal() {
+func (c *PropertiesController) GetAnalytics() {
 	// return golang http template
 	c.TplName = "index.html"
 

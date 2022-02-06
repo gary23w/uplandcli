@@ -1,7 +1,7 @@
 package main
 
 import (
-	"eos_bot/cmd/root"
+	"github.com/gary23w/uplandcli/cmd/root"
 )
 
 func main() {

@@ -1,13 +1,14 @@
 package interface_main
 
 import (
-	"eos_bot/internal/req"
 	"fmt"
 	"log"
 	"math"
 	"regexp"
 	"strconv"
 	"time"
+
+	"github.com/gary23w/uplandcli/internal/req"
 
 	ui "github.com/gizak/termui/v3"
 

@@ -1,9 +1,9 @@
 package root
 
 import (
-	api "eos_bot/api/props_crud"
-	uiInt "eos_bot/cmd/interface_main"
-	"eos_bot/internal/live"
+	uiInt "github.com/gary23w/uplandcli/cmd/interface_main"
+	api "github.com/gary23w/uplandcli/internal/api/cmd"
+	"github.com/gary23w/uplandcli/internal/live"
 
 	"github.com/spf13/cobra"
 )
@@ -18,7 +18,7 @@ var (
 func NewUPLDCmd() *cobra.Command {
 return &cobra.Command{
 	Use:   "upland",
-	Short: "run the upland pipeline",
+	Short: "run the upland blockchain data collector",
 	Long: `++UPLD-CLI UPLAND++
 		========================
 		The UPLD-PIPELINE will query from the blockchain and collect data related

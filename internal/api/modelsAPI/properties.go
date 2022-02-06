@@ -1,4 +1,4 @@
-package models_api
+package modelsAPI
 
 import (
 	"errors"

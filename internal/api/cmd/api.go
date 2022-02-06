@@ -1,7 +1,7 @@
-package props_crud
+package cmd
 
 import (
-	_ "eos_bot/api/props_crud/routers"
+	_ "github.com/gary23w/uplandcli/internal/api/routers"
 
 	"github.com/beego/beego/v2/client/orm"
 	beego "github.com/beego/beego/v2/server/web"

@@ -2,14 +2,14 @@ package req
 
 import (
 	"encoding/json"
-	"eos_bot/internal/models"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
 
-	"eos_bot/internal/database"
-	"eos_bot/internal/utils"
+	"github.com/gary23w/uplandcli/internal/models"
+
+	"github.com/gary23w/uplandcli/internal/database"
 )
 
 type EOSHTTPREQ struct {
@@ -34,7 +34,7 @@ func (x *EOSHTTPREQ) HttpEOSBasicRequest() models.APIRespBlockchain {
 			log.Fatal(err)
 		}
 		res, err := x.HttpClient(req)
-		if utils.IsJSON(string(res)) {
+		if models.IsJSON(string(res)) {
 			err = json.Unmarshal([]byte(res), &RespObj)
 			if err != nil {
 				log.Fatal(err)

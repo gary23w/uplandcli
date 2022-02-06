@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"eos_bot/internal/models"
-	"eos_bot/internal/req"
+	"github.com/gary23w/uplandcli/internal/models"
+	"github.com/gary23w/uplandcli/internal/req"
 )
 
 func TailDatabaseTables(bypassed bool) { 

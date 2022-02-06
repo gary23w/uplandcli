@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"eos_bot/api/props_crud/controllers"
+	"github.com/gary23w/uplandcli/internal/api/controllers"
 
 	beego "github.com/beego/beego/v2/server/web"
 )
