@@ -204,6 +204,3 @@ Data here is pulled in DESC order. Meaning that whichever is at the top of the l
 - EOS Hyperion
   - https://eos.hyperion.eosrio.io
 
-## Captures
-
-![working term user interface!](readme_block_capture.png "a working interface.")
