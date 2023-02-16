@@ -1,99 +1,74 @@
 # UPLANDCLI
 
-[![GoDev](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://dothissomeday.com)
+UPLANDCLI is a compact, highly capable Go application that streamlines the collection and visualization of Upland blockchain information and raw data. The tool facilitates the creation of a local database to store the collected data and employs graphing and analytics systems to offer insights into the long-term trends of the Upland ecosystem.
 
-**A small go application to collect and view upland related blockchain information and raw data**
+### Prerequisites
 
-## Prerequisites
+To leverage the full functionality of UPLANDCLI, users must ensure the following versions of Go, Node.js, and npm are installed:
 
-You must have the following versions of Node.js, npm, and Go installed:
+- Go: Go > v1.16.x
+- Node.js: Node.js v14.17.6
+- NPM: npm > v6.14.x
 
-- ~~Node.js: [Node.js](https://nodejs.org/en/) v14.17.6~~ currently not required
-- ~~NPM: [npm](https://www.npmjs.com/) > v6.14.x~~ currently not required
+### Basic Commands
 
-- Go: [Go](https://golang.org/doc/install) > v1.16.x
+upland
+The upland command initiates a pipeline to collect data related to Upland properties. The collected data is then used to populate the CLI based user interface.
 
-## Basic Commands
-
-~upland~
+#### Usage:
 
 ```
-++UPLD-CLI UPLAND++
-========================
-The UPLD-PIPELINE will query from the blockchain and collect data related
-to Upland properties. This data will be used to populate the CLI based user interface.
+uplandcli upland [flags]
 
-Example:
+
 upldcli upland --collect
 upldcli upland --live
 upldcli upland --live -a  // run API in async mode
 upldcli upland --live -a -b  // run API in async mode and bypass database connections
-
-The UPLD-PIPELINE will also scrape the Upland website and collect data via a headless browser.
-using chromedp and chromedp-go for headless browsing. This is a future implementation, and should be available soon.
-
-Usage:
-uplandcli upland [flags]
-
-Flags:
--a, --api       run API in async mode
--b, --bypass    bypass database connections and inserts
--d, --collect   will get all of the recent properties listed for sale.
--h, --help      help for upland
--q, --live      live mode which tails collected data in your shell.
 ```
 
-~database~
+#### Flags:
 
 ```
-++UPLD-DB UPLAND++
-========================
-The DB command is used to setup and initialize a postgresql database on heroku.
+-a, --api: Run API in async mode.
+-b, --bypass: Bypass database connections and inserts.
+-d, --collect: Retrieve all recently listed properties for sale.
+-h, --help: Display help for the upland command.
+-q, --live: Display live mode data in the shell.
+```
 
-Usage:
+---
+
+The database command is used to set up and initialize a PostgreSQL database on Heroku.
+
+##### Usage:
+
+```
 uplandcli database [flags]
 
-Flags:
--q, --check     checks to see if a database is already active
--d, --deploy    will setup a postgresql database on heroku
--u, --destroy   will attempt to destroy the database
--h, --help      help for database
+-q, --check: Check if a database is already active.
+-d, --deploy: Set up a PostgreSQL database on Heroku.
+-u, --destroy: Attempt to destroy the database.
+-h, --help: Display help for the database command.
 ```
 
-~api~
+---
+
+The api command deploys a CRUD API to interact with the database.
+
+##### Usage:
 
 ```
-++UPLD-DB UPLAND++
-========================
-The api command is used to deploy a crud api to interact with the database.
-
-Usage:
 uplandcli api [flags]
-
 Flags:
--d, --deploy   will initialize a crud api to interact with the database
--h, --help     help for api
+
+-d, --deploy: Initialize a CRUD API to interact with the database.
+-h, --help: Display help for the api command.
 ```
 
-## Database
+#### Configuration
 
-A heroku wrapper is in place to deploy a POSTGRES db.
-
-_Make sure you are signed into heroku frst._
-
-Then try to run.
-
-```
-go run main.go database --deploy
-```
-
-## Configuration
-
-the current collection methods rely on a **POSTGRES** database.
-
-To configure the collection system, a database.json file must be found within the **_conf/_** directory.
-
-- Example:
+UPLANDCLI relies on a PostgreSQL database to collect data. To configure the collection system, a database.json file must be available within the conf/ directory. Here's an example:
 
 ```
 {
@@ -107,23 +82,21 @@ To configure the collection system, a database.json file must be found within th
 }
 ```
 
-This system also uses a .conf file to configure the API. this file should be found within the **_conf/_** directory.
-
-- Example:
+UPLANDCLI also uses a .conf file to configure the API. This file should be available within the conf/ directory. Here's an example:
 
 ```
-	appname = MYAPPNAME
-	httpport = 1337
-	runmode = dev
-	autorender = false
-	copyrequestbody = true
-	EnableDocs = true
-	sqlconn = postgres://<username>:<password>@<ip>:<port>/<database>?sslmode=require
+    appname = MYAPPNAME
+    httpport = 1337
+    runmode = dev
+    autorender = false
+    copyrequestbody = true
+    EnableDocs = true
+    sqlconn = postgres://<username>:<password>@<ip>:<port>/<database>?sslmode=require
 ```
 
-an example logging.json file should be found within the **_conf/_** directory.
+#### Example Logging Configuration
 
-- Example:
+An example logging.json file can be found within the _conf/_ directory. This file provides a basic configuration for logging system information. Below is an example of what this file might look like:
 
 ```
 {
@@ -155,33 +128,34 @@ an example logging.json file should be found within the **_conf/_** directory.
 }
 ```
 
-## CLI Goals
+##### CLI Goals
 
-- A small tool to live load all blockchain information related to upland.me
-- Create a pipeline that collects from eos.hyperion.eosrio.io
+The Upland CLI has several goals:
+
+- Load all blockchain information related to upland.me
+- Collect data from eos.hyperion.eosrio.io
 - Transform data to selected outputs
 - Create a local database for collected data
-- Implement graphing and various analytics systems.
-  - Analyze longterm data to predict possible trends.
+- Implement graphing and various analytics systems
+- Analyze long-term data to predict possible trends
 
-## API Docs
+### API Documentation
 
-A small beego/swagger CRUD api is implemented
+The Upland CLI also includes a small beego/swagger CRUD API. The following endpoint is currently available:
 
 ```
 GET /upland/properties       | Get properties from database.
 ```
 
----
+**You can also view the collected data from your web browser by starting the API and visiting:**
 
-You can also view the data from your web browser.
-Simply fire up the API and go to:
+http://127.0.0.1:1337/upland/properties/analysis
 
-`http://127.0.0.1:1337/upland/properties/analysis`
+Data is displayed in descending order, with the most recently collected data at the top of the list.
 
-Data here is pulled in DESC order. Meaning that whichever is at the top of the list will be the most recently collected.
+## Built With:
 
-## Built With
+The Upland CLI was built using the following technologies:
 
 - [Golang]("https://go.dev/")
 
@@ -195,12 +169,6 @@ Data here is pulled in DESC order. Meaning that whichever is at the top of the l
 
 - [BEEGO]("https://github.com/beego/beego")
 
-## Acknowledgements
+##### Acknowledgements
 
-- Shout out to UPLAND.ME for an amazing metaverse experience.
-
-  - https://api.upland.me
-
-- EOS Hyperion
-  - https://eos.hyperion.eosrio.io
-
+We would like to give a special shoutout to Upland.me for providing an amazing metaverse experience. We would also like to thank EOS Hyperion for providing their services at https://eos.hyperion.eosrio.io.
