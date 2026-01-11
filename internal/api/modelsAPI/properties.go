@@ -2,8 +2,6 @@ package modelsAPI
 
 import (
 	"errors"
-	"fmt"
-	"log"
 	"reflect"
 	"strings"
 	"time"
@@ -53,6 +51,7 @@ func GetEveryPropertyDesc() (ml []interface{}, err error) {
 	o := orm.NewOrm()
 	var properties []Properties
 	if _, err = o.QueryTable("properties").OrderBy("-id").All(&properties); err == nil {
+		ml = make([]interface{}, 0, len(properties))
 		for _, v := range properties {
 			ml = append(ml, v)
 		}
@@ -66,6 +65,7 @@ func GetEveryProperty() (ml []interface{}, err error) {
 	o := orm.NewOrm()
 	var l []Properties
 	if _, err := o.QueryTable(new(Properties)).All(&l); err == nil {
+		ml = make([]interface{}, 0, len(l))
 		for _, v := range l {
 			ml = append(ml, v)
 		}
@@ -80,7 +80,6 @@ func GetAllProperties(query map[string]string, fields []string, sortby []string,
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(Properties))
-	log.Println(qs)
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute
@@ -134,10 +133,12 @@ func GetAllProperties(query map[string]string, fields []string, sortby []string,
 	qs = qs.OrderBy(sortFields...)
 	if _, err = qs.Limit(limit, offset).All(&l, fields...); err == nil {
 		if len(fields) == 0 {
+			ml = make([]interface{}, 0, len(l))
 			for _, v := range l {
 				ml = append(ml, v)
 			}
 		} else {
+			ml = make([]interface{}, 0, len(l))
 			// trim unused fields
 			for _, v := range l {
 				m := make(map[string]interface{})
@@ -160,10 +161,7 @@ func UpdatePropertiesById(m *Properties) (err error) {
 	v := Properties{Id: m.Id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
-		var num int64
-		if num, err = o.Update(m); err == nil {
-			fmt.Println("Number of records updated in database:", num)
-		}
+		_, err = o.Update(m)
 	}
 	return
 }
@@ -175,10 +173,7 @@ func DeleteProperties(id int) (err error) {
 	v := Properties{Id: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
-		var num int64
-		if num, err = o.Delete(&Properties{Id: id}); err == nil {
-			fmt.Println("Number of records deleted in database:", num)
-		}
+		_, err = o.Delete(&Properties{Id: id})
 	}
 	return
 }

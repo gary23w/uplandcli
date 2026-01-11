@@ -2,6 +2,7 @@ package live
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/gary23w/uplandcli/internal/models"
@@ -15,15 +16,23 @@ func TailDatabaseTables(bypassed bool) {
 		EOSHttpReq.Bypass_sql = bypassed
 		data = EOSHttpReq.CollectJsonFromAPI()
 			for _, v := range data {
-				var l string
 				if v.Type != "NULL-DATA" {
-					l = fmt.Sprintf("[*] %s | %s | https://play.upland.me/?prop_id=%s | %s\n", v.UPX, v.FIAT, v.ID, v.Address)
+					var b strings.Builder
+					b.Grow(128)
+					b.WriteString("[*] ")
+					b.WriteString(v.UPX)
+					b.WriteString(" | ")
+					b.WriteString(v.FIAT)
+					b.WriteString(" | https://play.upland.me/?prop_id=")
+					b.WriteString(v.ID)
+					b.WriteString(" | ")
+					b.WriteString(v.Address)
+					fmt.Println(b.String())
 				} else {
 					ti := time.Now()
-					l = "[*] No data available at " + ti.String() + "\n"
-					time.Sleep(time.Second * 3)
+					fmt.Println("[*] No data available at " + ti.String())
+					time.Sleep(3 * time.Second)
 				}
-				fmt.Println(l)
 			}
 	}
 }

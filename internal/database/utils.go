@@ -3,7 +3,7 @@ package database
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"math/rand"
 	"os"
@@ -11,12 +11,12 @@ import (
 )
 
 func writeNewName() string {
-	var randChar string
-		for i := 0; i < 7; i++ {
-			randChar = randChar + string(rune(65+rand.Intn(25)))
-		}
-		name := fmt.Sprintf("upl%s", strings.ToLower(randChar))
-		return name
+	var b strings.Builder
+	b.Grow(7)
+	for i := 0; i < 7; i++ {
+		b.WriteByte(byte(65 + rand.Intn(25)))
+	}
+	return fmt.Sprintf("upl%s", strings.ToLower(b.String()))
 }
 
 func writeConfigFiles(userJson UserCredentials, userConf string) {
@@ -59,9 +59,8 @@ func getPostgresCredentials() UserCredentials {
 		return userCredentials
 	}
 	defer jsonFile.Close()
-
-	byteValue, _ := ioutil.ReadAll(jsonFile)
-	json.Unmarshal(byteValue, &userCredentials)
+	dec := json.NewDecoder(io.LimitReader(jsonFile, 2*1024*1024))
+	_ = dec.Decode(&userCredentials)
 	return userCredentials
 }
 
@@ -70,7 +69,7 @@ func setLoadVar(rowCount UserCredentials) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = ioutil.WriteFile("./conf/database.json", json_file, 0644)
+	err = os.WriteFile("./conf/database.json", json_file, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}

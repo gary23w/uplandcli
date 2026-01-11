@@ -4,27 +4,26 @@ UPLANDCLI is a compact, highly capable Go application that streamlines the colle
 
 ### Prerequisites
 
-To leverage the full functionality of UPLANDCLI, users must ensure the following versions of Go, Node.js, and npm are installed:
+To build and run UPLANDCLI, you need:
 
-- Go: Go > v1.16.x
-- Node.js: Node.js v14.17.6
-- NPM: npm > v6.14.x
+- Go: Go >= 1.17 (see `go.mod`)
+
+Notes:
+- Node.js/npm are not required for the current CLI/API flow. References to browser scraping via `chromedp` are future/planned.
 
 ### Basic Commands
 
-upland
-The upland command initiates a pipeline to collect data related to Upland properties. The collected data is then used to populate the CLI based user interface.
+The `upland` command initiates a pipeline to collect data related to Upland properties. The collected data is then used to populate the CLI-based user interface.
 
 #### Usage:
 
 ```
 uplandcli upland [flags]
 
-
-upldcli upland --collect
-upldcli upland --live
-upldcli upland --live -a  // run API in async mode
-upldcli upland --live -a -b  // run API in async mode and bypass database connections
+uplandcli upland --collect
+uplandcli upland --live
+uplandcli upland --live -a      # start API in the background
+uplandcli upland --live -a -b   # bypass database inserts
 ```
 
 #### Flags:
@@ -70,6 +69,12 @@ Flags:
 
 UPLANDCLI relies on a PostgreSQL database to collect data. To configure the collection system, a database.json file must be available within the conf/ directory. Here's an example:
 
+Create the directory and files if they don’t exist:
+
+```
+mkdir conf
+```
+
 ```
 {
     "Url": "null",
@@ -96,7 +101,8 @@ UPLANDCLI also uses a .conf file to configure the API. This file should be avail
 
 #### Example Logging Configuration
 
-An example logging.json file can be found within the _conf/_ directory. This file provides a basic configuration for logging system information. Below is an example of what this file might look like:
+UPLANDCLI reads logging config from `conf/logging.json`.
+Below is an example of what this file might look like:
 
 ```
 {
@@ -159,7 +165,7 @@ The Upland CLI was built using the following technologies:
 
 - [Golang]("https://go.dev/")
 
-- [chromedp]("https://github.com/chromedp/chromedp")
+- chromedp (planned/future)
 
 - [TermUI]("https://github.com/gizak/termui")
 
@@ -172,3 +178,12 @@ The Upland CLI was built using the following technologies:
 ##### Acknowledgements
 
 We would like to give a special shoutout to Upland.me for providing an amazing metaverse experience. We would also like to thank EOS Hyperion for providing their services at https://eos.hyperion.eosrio.io.
+
+### Performance Notes
+
+Recent performance-focused changes include:
+
+- HTTP requests reuse a pooled client with timeouts and keep-alives.
+- JSON responses are decoded using streaming decoders to reduce allocations.
+- Database inserts are batched in a single transaction with a prepared statement.
+- UI/live loops avoid unbounded goroutine buildup.

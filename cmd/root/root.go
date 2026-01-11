@@ -3,10 +3,8 @@ package root
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"os"
-	"strings"
 
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
@@ -39,23 +37,14 @@ jsonfile, err := os.Open("conf/logging.json")
 		return err
 	}
 	defer jsonfile.Close()
-
-	var buf strings.Builder
-	_, err = io.Copy(&buf, jsonfile)
-	if err != nil {
-		// handle error
-		log.Fatalln("Could not convert file to string", err)
+	if err := json.NewDecoder(jsonfile).Decode(&config); err != nil {
 		return err
 	}
-	s := buf.String()
-	if err := json.Unmarshal([]byte(s), &config); err != nil {
-		panic(err)
-	}
 	logger, err := config.Build()
-	// zap.ReplaceGlobals(logger)
 	if err != nil {
-		panic(err)
+		return err
 	}
+	zap.ReplaceGlobals(logger)
 	logger.Debug("Running prerun with log level:", zap.String("log_level", Verbose))
 	return nil
 },
